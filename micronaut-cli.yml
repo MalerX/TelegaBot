@@ -1,0 +1,6 @@
+applicationType: default
+defaultPackage: com.malerx
+testFramework: junit
+sourceLanguage: java
+buildTool: gradle
+features: [app-name, gradle, hibernate-jpa, http-client-test, jackson-databind, java, java-application, jdbc-hikari, junit, liquibase, lombok, micronaut-aot, micronaut-build, micronaut-http-validation, netty-server, postgres, properties, readme, shade, slf4j-simple, testcontainers]
