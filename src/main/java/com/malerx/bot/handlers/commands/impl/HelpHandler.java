@@ -4,6 +4,7 @@ import com.malerx.bot.data.model.OutgoingMessage;
 import com.malerx.bot.data.model.TextMessage;
 import com.malerx.bot.handlers.commands.CommandHandler;
 import io.micronaut.core.annotation.NonNull;
+import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -18,6 +19,7 @@ public class HelpHandler implements CommandHandler {
 
     @Override
     public Optional<OutgoingMessage> handle(@NonNull Update update) {
+        log.debug("handle() -> get info");
         var message = update.hasCallbackQuery() ? update.getCallbackQuery().getMessage() :
                 (update.hasMessage() ? update.getMessage() : null);
         if (message != null) {
