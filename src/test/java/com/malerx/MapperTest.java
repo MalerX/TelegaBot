@@ -1,6 +1,7 @@
 package com.malerx;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.malerx.bot.data.model.WeatherData;
 import com.malerx.bot.handlers.commands.impl.Exchange;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import org.junit.jupiter.api.Test;
@@ -12,7 +13,7 @@ import java.util.logging.Logger;
 
 @MicronautTest
 public class MapperTest {
-    private static final String json = """
+    private static final String currency = """
             {
                 "disclaimer": "https://www.cbr-xml-daily.ru/#terms",
                 "date": "2024-01-27",
@@ -65,12 +66,98 @@ public class MapperTest {
                 }
             }""";
 
+    private static final String weatherJson = """
+            {
+               "fact" : {
+                  "condition" : "clear",
+                  "daytime" : "n",
+                  "feels_like" : -6,
+                  "humidity" : 82,
+                  "icon" : "skc_n",
+                  "obs_time" : 1706905988,
+                  "polar" : false,
+                  "pressure_mm" : 749,
+                  "pressure_pa" : 998,
+                  "season" : "winter",
+                  "temp" : -1,
+                  "wind_dir" : "w",
+                  "wind_gust" : 7.9,
+                  "wind_speed" : 3.2
+               },
+               "forecast" : {
+                  "date" : "2024-02-03",
+                  "date_ts" : 1706907600,
+                  "moon_code" : 4,
+                  "moon_text" : "moon-code-4",
+                  "parts" : [
+                     {
+                        "condition" : "partly-cloudy",
+                        "daytime" : "n",
+                        "feels_like" : -7,
+                        "humidity" : 84,
+                        "icon" : "skc_n",
+                        "part_name" : "night",
+                        "polar" : false,
+                        "prec_mm" : 0,
+                        "prec_period" : 480,
+                        "prec_prob" : 10,
+                        "pressure_mm" : 749,
+                        "pressure_pa" : 998,
+                        "temp_avg" : -2,
+                        "temp_max" : 0,
+                        "temp_min" : -3,
+                        "wind_dir" : "w",
+                        "wind_gust" : 8.3,
+                        "wind_speed" : 3.7
+                     },
+                     {
+                        "condition" : "snow",
+                        "daytime" : "d",
+                        "feels_like" : -8,
+                        "humidity" : 85,
+                        "icon" : "ovc_sn",
+                        "part_name" : "morning",
+                        "polar" : false,
+                        "prec_mm" : 1.6,
+                        "prec_period" : 360,
+                        "prec_prob" : 30,
+                        "pressure_mm" : 748,
+                        "pressure_pa" : 997,
+                        "temp_avg" : -2,
+                        "temp_max" : 0,
+                        "temp_min" : -3,
+                        "wind_dir" : "sw",
+                        "wind_gust" : 9.8,
+                        "wind_speed" : 4.7
+                     }
+                  ],
+                  "sunrise" : "07:50",
+                  "sunset" : "17:12",
+                  "week" : 5
+               },
+               "info" : {
+                  "lat" : 50.188222,
+                  "lon" : 40.504201,
+                  "url" : "https://yandex.ru/pogoda/122648?lat=50.188222&lon=40.504201"
+               },
+               "now" : 1706905988,
+               "now_dt" : "2024-02-02T20:33:08.708429Z"
+            }
+            """;
+
+
     @Inject
     ObjectMapper mapper;
 
     @Test
     void mapperTest() throws IOException {
-        Exchange exchange = mapper.readValue(json.getBytes(StandardCharsets.UTF_8), Exchange.class);
+        Exchange exchange = mapper.readValue(currency.getBytes(StandardCharsets.UTF_8), Exchange.class);
         Logger.getAnonymousLogger().info(exchange.toString());
+    }
+
+    @Test
+    void mapperWeather() throws IOException {
+        WeatherData weatherData = mapper.readValue(weatherJson, WeatherData.class);
+        System.out.println(weatherData);
     }
 }
