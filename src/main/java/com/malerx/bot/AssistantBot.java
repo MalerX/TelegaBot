@@ -10,11 +10,14 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import javax.inject.Singleton;
-import java.util.concurrent.StructuredTaskScope;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 @Singleton
 @Slf4j
 public class AssistantBot extends TelegramLongPollingBot {
+    private static final Executor EXECUTOR = Executors.newVirtualThreadPerTaskExecutor();
+
     @Value(value = "${telegram.token}")
     private String token;
     @Value(value = "${telegram.username}")
@@ -32,20 +35,13 @@ public class AssistantBot extends TelegramLongPollingBot {
     }
 
     private void handle(Update update) {
-
-        try (var scope = new StructuredTaskScope<Void>()) {
-            scope.fork(() -> {
-                long chatId = update.getMessage().getChatId();
-                log.debug("handle() -> processing message: {}", chatId);
-                manager.handle(update)
-                        .ifPresentOrElse(this::send,
-                                () -> log.warn("onUpdateReceived() -> outgoing message of update {} is null", chatId));
-                return null;
-            });
-            scope.join();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        EXECUTOR.execute(() -> {
+            long chatId = update.getMessage().getChatId();
+            log.debug("handle() -> processing message: {}", chatId);
+            manager.handle(update)
+                    .ifPresentOrElse(this::send,
+                            () -> log.warn("onUpdateReceived() -> outgoing message of update {} is null", chatId));
+        });
     }
 
     private void send(OutgoingMessage outgoing) {

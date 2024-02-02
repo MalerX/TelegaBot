@@ -73,9 +73,6 @@ micronaut {
         deduceEnvironment = true
         optimizeNetty = true
     }
-    tasks.withType(JavaCompile).each {
-        it.options.compilerArgs.add('--enable-preview')
-    }
 }
 
 
