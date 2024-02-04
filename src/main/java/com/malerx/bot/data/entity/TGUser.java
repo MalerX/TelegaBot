@@ -18,8 +18,6 @@ public class TGUser {
     @Id
     private Long id;
     private String nickname;
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Set<GpgRecord> gpgPublicKeys;
     private Role role;
     @OneToOne(cascade = CascadeType.ALL)
     private Tenant tenant;
