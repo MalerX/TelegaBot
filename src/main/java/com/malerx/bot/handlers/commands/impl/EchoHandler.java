@@ -29,4 +29,9 @@ public class EchoHandler implements CommandHandler {
     public Boolean support(@NonNull Update update) {
         return update.getMessage().getText().startsWith(COMMAND);
     }
+
+    @Override
+    public String getInfo() {
+        return  "эхо хэндлер";
+    }
 }

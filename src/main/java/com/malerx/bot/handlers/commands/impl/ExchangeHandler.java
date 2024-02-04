@@ -1,5 +1,6 @@
 package com.malerx.bot.handlers.commands.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.malerx.bot.data.model.OutgoingMessage;
 import com.malerx.bot.data.model.TextMessage;
 import com.malerx.bot.handlers.commands.CommandHandler;
@@ -30,10 +31,10 @@ public class ExchangeHandler implements CommandHandler {
 
     public ExchangeHandler(HttpClient client,
                            @Value("${api.cbr:}") String uri,
-                           HttpResponse.BodyHandler<Exchange> bodyHandler) {
+                           ObjectMapper mapper) {
         this.client = client;
         this.cbr = URI.create(uri);
-        this.bodyHandler = bodyHandler;
+        this.bodyHandler = new CustomBodyHandler<>(mapper, Exchange.class);
     }
 
     @Override
@@ -77,5 +78,10 @@ public class ExchangeHandler implements CommandHandler {
     @Override
     public Boolean support(Update update) {
         return update.getMessage().getText().startsWith(COMMAND);
+    }
+
+    @Override
+    public String getInfo() {
+        return  "конвертёр валют из рублей в указанную валюту по курсу ЦБР.";
     }
 }

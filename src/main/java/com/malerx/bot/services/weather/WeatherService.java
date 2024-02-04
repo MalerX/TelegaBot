@@ -1,5 +1,8 @@
 package com.malerx.bot.services.weather;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.malerx.bot.data.model.WeatherData;
+import com.malerx.bot.handlers.commands.impl.CustomBodyHandler;
 import io.micronaut.context.annotation.Value;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.util.StringUtils;
@@ -24,19 +27,22 @@ public class WeatherService {
 
     private final HttpClient httpClient;
     private final Position position;
+    private final HttpResponse.BodyHandler<WeatherData> bodyHandler;
 
     public WeatherService(HttpClient httpClient, Position position,
                           @Value(value = "${api.yandex.weather}") String weatherToken,
                           @Value(value = "${api.yandex.geo}") String geoToken,
-                          @Value(value = "${api.yandex.urlGeo}") String urlGeo) {
+                          @Value(value = "${api.yandex.urlGeo}") String urlGeo,
+                          ObjectMapper mapper) {
         this.httpClient = httpClient;
         this.position = position;
         this.weatherToken = weatherToken;
         this.geoToken = geoToken;
         this.urlGeo = urlGeo;
+        this.bodyHandler = new CustomBodyHandler<>(mapper, WeatherData.class);
     }
 
-    public Optional<String> getWeather(@NonNull Update update) {
+    public Optional<WeatherData> getWeather(@NonNull Update update) {
         try {
             log.debug("handle() -> incoming request weather");
             String[] destination = update.getMessage().getText().split("\\s", 2);
@@ -70,7 +76,7 @@ public class WeatherService {
         return Optional.empty();
     }
 
-    private Optional<String> getWeather(Coordinates coordinates) throws IOException, InterruptedException {
+    private Optional<WeatherData> getWeather(Coordinates coordinates) throws IOException, InterruptedException {
         if (Objects.isNull(coordinates)) {
             return Optional.empty();
         }
@@ -79,7 +85,7 @@ public class WeatherService {
                 .uri(coordinates.getUri())
                 .header("X-Yandex-API-Key", weatherToken)
                 .build();
-        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<WeatherData> response = httpClient.send(request, bodyHandler);
         return Optional.ofNullable(response.body());
     }
 }

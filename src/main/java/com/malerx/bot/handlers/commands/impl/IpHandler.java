@@ -92,4 +92,9 @@ public class IpHandler implements CommandHandler {
     public Boolean support(Update update) {
         return update.getMessage().getText().startsWith(COMMAND);
     }
+
+    @Override
+    public String getInfo() {
+        return "ip адрес";
+    }
 }

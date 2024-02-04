@@ -11,22 +11,24 @@ import java.net.http.HttpResponse;
 
 @Singleton
 @Slf4j
-public class ExchangeBodyHandler implements HttpResponse.BodyHandler<Exchange> {
+public class CustomBodyHandler<T> implements HttpResponse.BodyHandler<T> {
     private final ObjectMapper mapper;
+    private final Class<T> tClass;
 
-    public ExchangeBodyHandler(ObjectMapper mapper) {
+    public CustomBodyHandler(ObjectMapper mapper, Class<T> tClass) {
         this.mapper = mapper;
+        this.tClass = tClass;
     }
 
     @Override
-    public HttpResponse.BodySubscriber<Exchange> apply(HttpResponse.ResponseInfo responseInfo) {
-        log.debug("apply() -> map response to Exchange");
+    public HttpResponse.BodySubscriber<T> apply(HttpResponse.ResponseInfo responseInfo) {
+        log.debug("apply() -> map response to {}", tClass);
         HttpResponse.BodySubscriber<InputStream> upstream = HttpResponse.BodySubscribers.ofInputStream();
 
         return HttpResponse.BodySubscribers.mapping(
                 upstream, (InputStream body) -> {
                     try {
-                        return mapper.readValue(body, Exchange.class);
+                        return mapper.readValue(body, tClass);
                     } catch (IOException e) {
                         throw new UncheckedIOException(e);
                     }

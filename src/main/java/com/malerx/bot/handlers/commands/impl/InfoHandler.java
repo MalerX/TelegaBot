@@ -67,4 +67,9 @@ public class InfoHandler implements CommandHandler {
     public Boolean support(Update update) {
         return update.getMessage().getText().startsWith(COMMAND);
     }
+
+    @Override
+    public String getInfo() {
+        return "информация о зарегистрированном пользователе";
+    }
 }

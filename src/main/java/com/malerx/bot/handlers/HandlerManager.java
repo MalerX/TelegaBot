@@ -34,10 +34,7 @@ public class HandlerManager {
         this.stateRepository = stateRepository;
         this.stateFactories = stateFactories.stream()
                 .filter(Objects::nonNull)
-                .collect(Collectors.toMap(
-                        (k) -> k.getClass().getSimpleName(),
-                        (v) -> v)
-                );
+                .collect(Collectors.toMap(k -> k.getClass().getSimpleName(), v -> v));
         this.mapper = mapper;
     }
 
@@ -102,9 +99,7 @@ public class HandlerManager {
 
     private Optional<OutgoingMessage> sendError(PersistState s) {
         s.setStage(Stage.ERROR);
-        s.setDescription(
-                String.format("Не найдена реализованная машина состояний для %s", s.getStateMachine())
-        );
+        s.setDescription(String.format("Не найдена реализованная машина состояний для %s", s.getStateMachine()));
         stateRepository.update(s);
         return Optional.of(new TextMessage(Set.of(s.getChatId()), s.getDescription()));
     }

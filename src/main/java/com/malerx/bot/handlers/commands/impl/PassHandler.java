@@ -87,4 +87,9 @@ public class PassHandler implements CommandHandler {
     public Boolean support(Update update) {
         return update.getMessage().getText().startsWith(COMMAND);
     }
+
+    @Override
+    public String getInfo() {
+        return "получение пропуска на автомобиль (только для зарегистрированных пользователей)";
+    }
 }

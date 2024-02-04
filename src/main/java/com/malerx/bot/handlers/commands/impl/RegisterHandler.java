@@ -71,4 +71,9 @@ public class RegisterHandler implements CommandHandler {
     public Boolean support(@NonNull Update update) {
         return update.getMessage().getText().startsWith(COMMAND);
     }
+
+    @Override
+    public String getInfo() {
+        return "регистрация";
+    }
 }
