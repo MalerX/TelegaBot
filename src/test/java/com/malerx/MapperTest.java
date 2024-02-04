@@ -2,7 +2,7 @@ package com.malerx;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.malerx.bot.data.model.WeatherData;
-import com.malerx.bot.handlers.commands.impl.Exchange;
+import com.malerx.bot.services.exchange.Exchange;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import org.junit.jupiter.api.Test;
 

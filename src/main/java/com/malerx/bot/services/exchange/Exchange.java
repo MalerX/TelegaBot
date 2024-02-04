@@ -1,4 +1,4 @@
-package com.malerx.bot.handlers.commands.impl;
+package com.malerx.bot.services.exchange;
 
 import lombok.Data;
 

@@ -1,4 +1,4 @@
-package com.malerx.bot.data.model;
+package com.malerx.bot.services.weather;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -21,6 +21,7 @@ public class WeatherData {
 
     @JsonProperty("now_dt")
     private String nowDt;
+
 }
 
 @Data
