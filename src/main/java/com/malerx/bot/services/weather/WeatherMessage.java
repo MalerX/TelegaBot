@@ -1,5 +1,6 @@
-package com.malerx.bot.data.model;
+package com.malerx.bot.services.weather;
 
+import com.malerx.bot.data.model.OutgoingMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 

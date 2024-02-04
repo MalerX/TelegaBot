@@ -1,11 +1,7 @@
 package com.malerx.bot.services.weather;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.malerx.bot.data.model.WeatherData;
-import com.malerx.bot.handlers.commands.impl.CustomBodyHandler;
 import io.micronaut.context.annotation.Value;
 import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -26,38 +22,32 @@ public class WeatherService {
     private final String urlGeo;
 
     private final HttpClient httpClient;
-    private final Position position;
-    private final HttpResponse.BodyHandler<WeatherData> bodyHandler;
+    private final HttpResponse.BodyHandler<WeatherData> weatherBodyHandler;
+    private final HttpResponse.BodyHandler<GeoData> geoDataBodyHandler;
 
-    public WeatherService(HttpClient httpClient, Position position,
+    public WeatherService(HttpClient httpClient,
                           @Value(value = "${api.yandex.weather}") String weatherToken,
                           @Value(value = "${api.yandex.geo}") String geoToken,
                           @Value(value = "${api.yandex.urlGeo}") String urlGeo,
-                          ObjectMapper mapper) {
+                          HttpResponse.BodyHandler<WeatherData> weatherBodyHandler,
+                          HttpResponse.BodyHandler<GeoData> geoDataBodyHandler) {
         this.httpClient = httpClient;
-        this.position = position;
         this.weatherToken = weatherToken;
         this.geoToken = geoToken;
         this.urlGeo = urlGeo;
-        this.bodyHandler = new CustomBodyHandler<>(mapper, WeatherData.class);
+        this.weatherBodyHandler = weatherBodyHandler;
+        this.geoDataBodyHandler = geoDataBodyHandler;
     }
 
     public Optional<WeatherData> getWeather(@NonNull Update update) {
-        try {
-            log.debug("handle() -> incoming request weather");
-            String[] destination = update.getMessage().getText().split("\\s", 2);
-            Optional<Coordinates> coordinates = getCoordinates(destination[1]);
-            if (coordinates.isPresent())
-                return getWeather(coordinates.get());
-            log.error("getCoordinates() -> failed get position for {}", destination[1]);
-            return Optional.empty();
-        } catch (IOException | InterruptedException e) {
-            log.error("getWeather() -> error: ", e);
-            return Optional.empty();
-        }
+        log.debug("handle() -> incoming request weather");
+        String[] destination = update.getMessage().getText().split("\\s", 2);
+        return getCoordinates(destination[1])
+                .flatMap(this::getWeather)
+                .or(Optional::empty);
     }
 
-    private Optional<Coordinates> getCoordinates(String destination) throws IOException, InterruptedException {
+    private Optional<Coordinates> getCoordinates(String destination) {
         log.debug("getCoordinates() -> send request pos for {}", destination);
         String uriStr = urlGeo.concat(
                 String.format("?format=json&apikey=%s&geocode=%s",
@@ -66,17 +56,16 @@ public class WeatherService {
                 .GET()
                 .uri(URI.create(uriStr))
                 .build();
-        HttpResponse<String> httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        log.debug("getCoordinates() -> receive response with pos");
-        if (StringUtils.isNotEmpty(httpResponse.body())) {
-            return position.extract(httpResponse.body());
-        } else {
-            log.error("getCoordinates() -> response body is empty");
+        try {
+            return Optional.of(httpClient.send(request, geoDataBodyHandler)
+                    .body().getCoordinates());
+        } catch (IOException | InterruptedException e) {
+            log.error("getWeather() -> error: ", e);
+            return Optional.empty();
         }
-        return Optional.empty();
     }
 
-    private Optional<WeatherData> getWeather(Coordinates coordinates) throws IOException, InterruptedException {
+    private Optional<WeatherData> getWeather(Coordinates coordinates) {
         if (Objects.isNull(coordinates)) {
             return Optional.empty();
         }
@@ -85,7 +74,10 @@ public class WeatherService {
                 .uri(coordinates.getUri())
                 .header("X-Yandex-API-Key", weatherToken)
                 .build();
-        HttpResponse<WeatherData> response = httpClient.send(request, bodyHandler);
-        return Optional.ofNullable(response.body());
+        try {
+            return Optional.of(httpClient.send(request, weatherBodyHandler).body());
+        } catch (InterruptedException | IOException e) {
+            return Optional.empty();
+        }
     }
 }
