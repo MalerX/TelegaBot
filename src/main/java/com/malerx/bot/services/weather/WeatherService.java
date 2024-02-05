@@ -49,9 +49,8 @@ public class WeatherService {
 
     private Optional<Coordinates> getCoordinates(String destination) {
         log.debug("getCoordinates() -> send request pos for {}", destination);
-        String uriStr = urlGeo.concat(
-                String.format("?format=json&apikey=%s&geocode=%s",
-                        geoToken, destination.replace(" ", "+")));
+        String uriStr = urlGeo.concat(String.format("?format=json&apikey=%s&geocode=%s",
+                geoToken, destination.replace(" ", "+")));
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
                 .uri(URI.create(uriStr))
@@ -69,11 +68,7 @@ public class WeatherService {
         if (Objects.isNull(coordinates)) {
             return Optional.empty();
         }
-        HttpRequest request = HttpRequest.newBuilder()
-                .GET()
-                .uri(coordinates.getUri())
-                .header("X-Yandex-API-Key", weatherToken)
-                .build();
+        HttpRequest request = coordinates.request(weatherToken);
         try {
             return Optional.of(httpClient.send(request, weatherBodyHandler).body());
         } catch (InterruptedException | IOException e) {

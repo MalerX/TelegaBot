@@ -1,9 +1,14 @@
 package com.malerx.bot.services.weather;
 
-import java.net.URI;
+import lombok.extern.slf4j.Slf4j;
 
+import java.net.URI;
+import java.net.http.HttpRequest;
+
+@Slf4j
 public class Coordinates {
     private static final String urlWeather = "https://api.weather.yandex.ru/v2/informers";
+    private static final String API_KEY = "X-Yandex-API-Key";
     private final String latitude;
     private final String longitude;
 
@@ -13,8 +18,13 @@ public class Coordinates {
         this.latitude = coordinates[1];
     }
 
-    public URI getUri() {
-        return URI.create(
-                urlWeather.concat(String.format("?lat=%s&lon=%s", latitude, longitude)));
+    public HttpRequest request(String weatherToken) {
+
+        URI uri = URI.create(urlWeather.concat(String.format("?lat=%s&lon=%s", latitude, longitude)));
+        return HttpRequest.newBuilder()
+                .GET()
+                .uri(uri)
+                .header(API_KEY, weatherToken)
+                .build();
     }
 }
