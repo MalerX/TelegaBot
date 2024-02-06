@@ -23,6 +23,7 @@ dependencies {
     compileOnly("io.micronaut:micronaut-http-client")
     compileOnly("org.projectlombok:lombok")
     runtimeOnly("org.postgresql:postgresql")
+    implementation("de.vandermeer:asciitable:0.3.2")
 
 //    runtimeOnly("org.slf4j:slf4j-simple")
     // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core
@@ -40,6 +41,7 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.telegram/telegrambots
     implementation group: 'org.telegram', name: 'telegrambots', version: '6.9.7.0'
+    implementation files("libs/padeg-3.3.0.24.jar")
 
 }
 

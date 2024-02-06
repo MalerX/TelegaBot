@@ -15,7 +15,7 @@ import java.util.Set;
 @Singleton
 @Slf4j
 public class WeatherHandler implements CommandHandler {
-    private static final String COMMAND = "/weather";
+    private static final String COMMAND = "/погода";
 
     private final WeatherService weatherService;
 
@@ -26,8 +26,9 @@ public class WeatherHandler implements CommandHandler {
     @Override
     public Optional<OutgoingMessage> handle(@NonNull Update update) {
         log.debug("handle() -> get weather");
+        String city = update.getMessage().getText().substring(COMMAND.length()).trim();
         return weatherService.getWeather(update)
-                .<OutgoingMessage>map(weather -> new WeatherMessage(Set.of(update.getMessage().getChatId()), weather))
+                .<OutgoingMessage>map(weather -> new WeatherMessage(Set.of(update.getMessage().getChatId()), city, weather))
                 .or(Optional::empty);
     }
 
