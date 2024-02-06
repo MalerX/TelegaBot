@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class WeatherMessage extends OutgoingMessage {
     private static final DateTimeFormatter output = DateTimeFormatter.ofPattern("dd.MM.yy");
-    private static final String HEADER_TEMPLATE = "Погода в %s на %s";
+    private static final String HEADER_TEMPLATE = "Погода по %s на %s";
     private final WeatherData weather;
     private final String city;
 
@@ -51,7 +51,6 @@ public class WeatherMessage extends OutgoingMessage {
         AsciiTable table = new AsciiTable();
         table.addRule();
         table.addRow(null, header)
-                .setPaddingTopBottom(1)
                 .setTextAlignment(TextAlignment.CENTER);
         table.addRule();
         AT_Row temp = table.addRow("🌡 Температура:", fact.getTemp());
