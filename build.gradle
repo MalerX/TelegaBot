@@ -41,13 +41,17 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.telegram/telegrambots
     implementation group: 'org.telegram', name: 'telegrambots', version: '6.9.7.0'
+    // https://mvnrepository.com/artifact/com.vk.api/sdk
+    implementation group: 'com.vk.api', name: 'sdk', version: '1.0.15'
     implementation files("libs/padeg-3.3.0.24.jar")
+
 
 }
 
 
 application {
     mainClass.set("com.malerx.Application")
+    applicationDefaultJvmArgs = ['--add-opens', 'java.base/java.lang=ALL-UNNAMED']
 }
 java {
     sourceCompatibility = JavaVersion.toVersion("21")
@@ -75,6 +79,9 @@ micronaut {
         deduceEnvironment = true
         optimizeNetty = true
     }
+//    tasks.withType(JavaCompile).each {
+//        it.options.compilerArgs.add('--add-opens java.lang=ALL-UNNAMED')
+//    }
 }
 
 
