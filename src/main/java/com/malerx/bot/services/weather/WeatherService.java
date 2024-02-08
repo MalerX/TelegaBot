@@ -24,7 +24,7 @@ public class WeatherService {
     private final HttpClient httpClient;
     private final HttpResponse.BodyHandler<WeatherData> weatherBodyHandler;
     private final HttpResponse.BodyHandler<GeoData> geoDataBodyHandler;
-    private final WeatherStorage weatherStorage;
+    private final WeatherCache weatherStorage;
 
     public WeatherService(HttpClient httpClient,
                           @Value(value = "${api.yandex.weather}") String weatherToken,
@@ -32,7 +32,7 @@ public class WeatherService {
                           @Value(value = "${api.yandex.urlGeo}") String urlGeo,
                           HttpResponse.BodyHandler<WeatherData> weatherBodyHandler,
                           HttpResponse.BodyHandler<GeoData> geoDataBodyHandler,
-                          WeatherStorage weatherStorage) {
+                          WeatherCache weatherStorage) {
         this.httpClient = httpClient;
         this.weatherToken = weatherToken;
         this.geoToken = geoToken;
@@ -71,13 +71,13 @@ public class WeatherService {
         if (Objects.isNull(coordinates)) {
             return Optional.empty();
         }
-        Optional<WeatherData> cached = weatherStorage.searchWeather(coordinates.getCity());
+        Optional<WeatherData> cached = weatherStorage.searchDocument(coordinates.getCity());
         if (cached.isPresent())
             return cached;
         HttpRequest request = coordinates.request(weatherToken);
         try {
             WeatherData weather = httpClient.send(request, weatherBodyHandler).body();
-            weatherStorage.saveWeather(coordinates.getCity(), weather);
+            weatherStorage.saveDocument(weather, coordinates.getCity());
             return Optional.of(weather);
         } catch (InterruptedException | IOException e) {
             return Optional.empty();

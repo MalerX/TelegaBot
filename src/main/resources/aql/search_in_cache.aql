@@ -1,8 +1,8 @@
 LET currentTimestamp = DATE_NOW()
 LET twelveHoursAgo = DATE_SUBTRACT(currentTimestamp, 12, "hour")
 
-FOR w IN weather
-  FILTER w.city == @city && w.date >= twelveHoursAgo
-  SORT w.date DESC
+FOR r IN @@collection
+  FILTER r.label == @label && r.date >= twelveHoursAgo
+  SORT r.date DESC
   LIMIT 1
-RETURN w
+RETURN r

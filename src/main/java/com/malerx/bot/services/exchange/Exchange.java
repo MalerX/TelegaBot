@@ -8,7 +8,7 @@ import java.util.Map;
 @Data
 public class Exchange {
     String disclaimer;
-    LocalDate date;
+    String date;
     long timestamp;
     String base;
     Map<String, Double> rates;

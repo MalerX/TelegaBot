@@ -2,6 +2,7 @@ package com.malerx.bot.services.exchange;
 
 import com.malerx.bot.data.model.OutgoingMessage;
 import com.malerx.bot.data.model.TextMessage;
+import com.malerx.bot.services.weather.CurrencyCache;
 import io.micronaut.context.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -19,17 +20,20 @@ import java.util.Set;
 @Singleton
 @Slf4j
 public class ExchangeService {
-
+    private static final String CURRENCY = "currency";
     private final HttpClient client;
     private final URI cbr;
     private final HttpResponse.BodyHandler<Exchange> exchangeBodyHandler;
+    private final CurrencyCache currencyCache;
 
     public ExchangeService(HttpClient client,
                            @Value("${api.cbr:}") String uri,
-                           HttpResponse.BodyHandler<Exchange> exchangeBodyHandler) {
+                           HttpResponse.BodyHandler<Exchange> exchangeBodyHandler,
+                           CurrencyCache currencyCache) {
         this.client = client;
         this.cbr = URI.create(uri);
         this.exchangeBodyHandler = exchangeBodyHandler;
+        this.currencyCache = currencyCache;
     }
 
     public Optional<OutgoingMessage> exchange(Update update) {
@@ -51,10 +55,14 @@ public class ExchangeService {
     }
 
     private Optional<Exchange> getExchange() {
+        Optional<Exchange> cached = currencyCache.searchDocument(CURRENCY);
+        if (cached.isPresent())
+            return cached;
         log.debug("getExchange() -> get exchange course from {}", cbr);
         try {
             HttpRequest request = HttpRequest.newBuilder(cbr).GET().build();
             HttpResponse<Exchange> httpResponse = client.send(request, exchangeBodyHandler);
+            currencyCache.saveDocument(httpResponse.body(), CURRENCY);
             return Optional.of(httpResponse.body());
         } catch (IOException | InterruptedException e) {
             log.error("handle() -> error sending request: ", e);

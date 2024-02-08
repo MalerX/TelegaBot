@@ -1,6 +1,7 @@
 package com.malerx.bot.factory;
 
 import com.arangodb.ArangoDB;
+import com.arangodb.ArangoDatabase;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.malerx.bot.handlers.commands.impl.CustomBodyHandler;
 import com.malerx.bot.services.exchange.Exchange;
@@ -27,6 +28,7 @@ public class BeanFactory {
     private final int arangoPort;
     private final String arangoUser;
     private final String arangoPass;
+    private final String arangoDatabase;
 
     public BeanFactory(ObjectMapper mapper,
                        @Value(value = "${api.vk.access_token}") String vkToken,
@@ -34,6 +36,7 @@ public class BeanFactory {
                        @Value(value = "${arango.host}") String arangoHost,
                        @Value(value = "${arango.port}") int arangoPort,
                        @Value(value = "${arango.user}") String arangoUser,
+                       @Value(value = "${arango.db:}") String arangoDatabase,
                        @Value(value = "${arango.pass}") String arangoPass) {
         this.mapper = mapper;
         this.vkToken = vkToken;
@@ -42,6 +45,7 @@ public class BeanFactory {
         this.arangoPass = arangoPass;
         this.arangoPort = arangoPort;
         this.arangoUser = arangoUser;
+        this.arangoDatabase = arangoDatabase;
     }
 
     @Bean
@@ -78,11 +82,12 @@ public class BeanFactory {
     }
 
     @Bean
-    public ArangoDB arangoDB() {
-        return new ArangoDB.Builder()
+    public ArangoDatabase arangoDatabase() {
+        ArangoDB accessor = new ArangoDB.Builder()
                 .host(arangoHost, arangoPort)
                 .user(arangoUser)
                 .password(arangoPass)
                 .build();
+        return accessor.db(arangoDatabase);
     }
 }
