@@ -4,7 +4,6 @@ import com.arangodb.ArangoCollection;
 import com.arangodb.ArangoCursor;
 import com.arangodb.ArangoDatabase;
 import com.arangodb.entity.BaseDocument;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.malerx.utils.ResourceUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,14 +20,10 @@ public abstract class AbstractCache<T> {
     private static final String CACHE = "document_cache";
     private static final String COLLECTION = "@collection";
     private static final String SEARCH_AQL = "aql/search_in_cache.aql";
-    protected final ArangoDatabase database;
     protected final ArangoCollection cache;
-    protected final ObjectMapper mapper;
     protected final Class<T> tClass;
 
-    public AbstractCache(ArangoDatabase database, ObjectMapper mapper, Class<T> tClass) {
-        this.database = database;
-        this.mapper = mapper;
+    public AbstractCache(ArangoDatabase database, Class<T> tClass) {
         this.tClass = tClass;
         this.cache = database.collection(CACHE);
     }
@@ -47,14 +42,12 @@ public abstract class AbstractCache<T> {
             return Optional.empty();
         }
         Map<String, Object> bindVars = Map.of(COLLECTION, CACHE, LABEL, label);
-        try (ArangoCursor<BaseDocument> cursor = database.query(aql, BaseDocument.class, bindVars)) {
-            List<BaseDocument> documents = cursor.asListRemaining();
+        try (ArangoCursor<T> cursor = cache.db().query(aql, tClass, bindVars)) {
+            List<T> documents = cursor.asListRemaining();
             if (documents.isEmpty())
                 return Optional.empty();
             log.debug("searchDocument() -> record was found in the database");
-            BaseDocument document = documents.getFirst();
-            T body = mapper.convertValue(document.getAttribute(BODY), tClass);
-            return Optional.of(body);
+            return Optional.of(documents.getFirst());
         } catch (Exception e) {
             log.error("error: ", e);
             return Optional.empty();

@@ -5,4 +5,4 @@ FOR r IN @@collection
   FILTER r.label == @label && r.date >= twelveHoursAgo
   SORT r.date DESC
   LIMIT 1
-RETURN r
+RETURN r.body

@@ -1,5 +1,6 @@
 package com.malerx.bot.services.weather;
 
+import com.malerx.bot.storage.AbstractCache;
 import io.micronaut.context.annotation.Value;
 import io.micronaut.core.annotation.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +25,7 @@ public class WeatherService {
     private final HttpClient httpClient;
     private final HttpResponse.BodyHandler<WeatherData> weatherBodyHandler;
     private final HttpResponse.BodyHandler<GeoData> geoDataBodyHandler;
-    private final WeatherCache weatherStorage;
+    private final AbstractCache<WeatherData> cache;
 
     public WeatherService(HttpClient httpClient,
                           @Value(value = "${api.yandex.weather}") String weatherToken,
@@ -32,14 +33,14 @@ public class WeatherService {
                           @Value(value = "${api.yandex.urlGeo}") String urlGeo,
                           HttpResponse.BodyHandler<WeatherData> weatherBodyHandler,
                           HttpResponse.BodyHandler<GeoData> geoDataBodyHandler,
-                          WeatherCache weatherStorage) {
+                          AbstractCache<WeatherData> cache) {
         this.httpClient = httpClient;
         this.weatherToken = weatherToken;
         this.geoToken = geoToken;
         this.urlGeo = urlGeo;
         this.weatherBodyHandler = weatherBodyHandler;
         this.geoDataBodyHandler = geoDataBodyHandler;
-        this.weatherStorage = weatherStorage;
+        this.cache = cache;
     }
 
     public Optional<WeatherData> getWeather(@NonNull Update update) {
@@ -71,13 +72,13 @@ public class WeatherService {
         if (Objects.isNull(coordinates)) {
             return Optional.empty();
         }
-        Optional<WeatherData> cached = weatherStorage.searchDocument(coordinates.getCity());
+        Optional<WeatherData> cached = cache.searchDocument(coordinates.getCity());
         if (cached.isPresent())
             return cached;
         HttpRequest request = coordinates.request(weatherToken);
         try {
             WeatherData weather = httpClient.send(request, weatherBodyHandler).body();
-            weatherStorage.saveDocument(weather, coordinates.getCity());
+            cache.saveDocument(weather, coordinates.getCity());
             return Optional.of(weather);
         } catch (InterruptedException | IOException e) {
             return Optional.empty();
