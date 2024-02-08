@@ -14,7 +14,9 @@ public class GeoData {
         String pos = response.getGeoObjectCollection()
                 .getFeatureMembers().getFirst()
                 .getGeoObject().getPoint().getPos();
-        return new Coordinates(pos);
+        String city = response.getGeoObjectCollection()
+                .getFeatureMembers().getFirst().getGeoObject().getName();
+        return new Coordinates(city, pos);
     }
 }
 

@@ -9,13 +9,15 @@ import java.net.http.HttpRequest;
 public class Coordinates {
     private static final String urlWeather = "https://api.weather.yandex.ru/v2/informers";
     private static final String API_KEY = "X-Yandex-API-Key";
+    private final String city;
     private final String latitude;
     private final String longitude;
 
-    public Coordinates(String pos) {
+    public Coordinates(String city, String pos) {
         String[] coordinates = pos.split("\\s");
         this.longitude = coordinates[0];
         this.latitude = coordinates[1];
+        this.city = city;
     }
 
     public HttpRequest request(String weatherToken) {
@@ -26,5 +28,9 @@ public class Coordinates {
                 .uri(uri)
                 .header(API_KEY, weatherToken)
                 .build();
+    }
+
+    public String getCity() {
+        return this.city;
     }
 }

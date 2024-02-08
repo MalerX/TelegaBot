@@ -24,6 +24,11 @@ dependencies {
     compileOnly("org.projectlombok:lombok")
     runtimeOnly("org.postgresql:postgresql")
     implementation("de.vandermeer:asciitable:0.3.2")
+    implementation 'com.arangodb:arangodb-java-driver:7.5.1'
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-jsr310
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.16.1")
+
+
 
 //    runtimeOnly("org.slf4j:slf4j-simple")
     // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core

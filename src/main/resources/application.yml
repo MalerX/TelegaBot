@@ -43,3 +43,9 @@ api:
     geo: ${GEO_TOKEN:}
     ip: https://ipv4-internet.yandex.net/api/v0/ip
   cbr: https://www.cbr-xml-daily.ru/latest.js
+arango:
+  host: localhost
+  port: 8529
+  user: root
+  pass: arango
+  db: telega-bot
