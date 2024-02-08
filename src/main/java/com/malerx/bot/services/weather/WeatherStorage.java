@@ -11,7 +11,7 @@ import io.micronaut.context.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.inject.Singleton;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -69,7 +69,7 @@ public class WeatherStorage {
         BaseDocument document = new BaseDocument(UUID.randomUUID().toString());
         document.addAttribute(CITY, city);
         document.addAttribute(BODY, body);
-        document.addAttribute("date", LocalDate.now().toString());
+        document.addAttribute("date", LocalDateTime.now().toString());
         return document;
     }
 }

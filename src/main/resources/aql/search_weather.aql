@@ -2,9 +2,7 @@ LET currentTimestamp = DATE_NOW()
 LET twelveHoursAgo = DATE_SUBTRACT(currentTimestamp, 12, "hour")
 
 FOR w IN weather
-  LET dateInSeconds = DATE_TIMESTAMP(w.date, "%Y-%m-%d")
-  LET twelveHoursAgoInSeconds = DATE_TIMESTAMP(twelveHoursAgo, "%Y-%m-%d")
-  FILTER w.city == @city && dateInSeconds >= twelveHoursAgoInSeconds
+  FILTER w.city == @city && w.date >= twelveHoursAgo
   SORT w.date DESC
   LIMIT 1
 RETURN w
