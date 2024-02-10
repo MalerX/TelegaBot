@@ -9,16 +9,17 @@ import io.camunda.zeebe.client.api.worker.JobHandler;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.inject.Singleton;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @ZeebeWorker(type = "io.camunda.zeebe:userTask")
 @Singleton
 @Slf4j
-public class TgUserTask implements JobHandler {
+public class UserTaskWorker implements JobHandler {
     private static final String USER_TASK_COLLECTION = "usertask";
     private final ArangoDatabase database;
 
-    public TgUserTask(ArangoDatabase database) {
+    public UserTaskWorker(ArangoDatabase database) {
         this.database = database;
     }
 
@@ -27,14 +28,13 @@ public class TgUserTask implements JobHandler {
         log.debug("handle() -> handle: {} -- {} version: {}",
                 job.getBpmnProcessId(), job.getKey(), job.getProcessDefinitionVersion());
         Map<String, Object> vars = job.getVariablesAsMap();
-        System.out.println(vars);
         BaseDocument userTask = new BaseDocument();
         userTask.addAttribute("actions", vars.get("actions"));
         userTask.addAttribute("userId", vars.get("userId"));
         userTask.addAttribute("processId", job.getBpmnProcessId());
         userTask.addAttribute("instanceKey", job.getProcessInstanceKey());
         userTask.addAttribute("jobKey", job.getKey());
-        System.out.println(userTask);
+        userTask.addAttribute("date", LocalDateTime.now().toString());
         database.collection(USER_TASK_COLLECTION).insertDocument(userTask);
     }
 }

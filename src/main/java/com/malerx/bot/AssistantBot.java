@@ -42,10 +42,12 @@ public class AssistantBot extends TelegramLongPollingBot {
             executor.execute(() -> {
                 if (update.hasCallbackQuery())
                     submitHandler.submit(update);
-                long chatId = update.getMessage().getChatId();
-                log.debug("handle() -> processing message: {}", chatId);
-                manager.handle(update)
-                        .ifPresentOrElse(this::send, () -> emptyResponse(chatId));
+                else {
+                    long chatId = update.getMessage().getChatId();
+                    log.debug("handle() -> processing message: {}", chatId);
+                    manager.handle(update)
+                            .ifPresentOrElse(this::send, () -> emptyResponse(chatId));
+                }
             });
         }
     }
