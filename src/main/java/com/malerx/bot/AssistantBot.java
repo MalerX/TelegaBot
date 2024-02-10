@@ -3,6 +3,7 @@ package com.malerx.bot;
 import com.malerx.bot.data.model.OutgoingMessage;
 import com.malerx.bot.data.model.TextMessage;
 import com.malerx.bot.handlers.HandlerManager;
+import com.malerx.bot.handlers.commands.impl.SubmitHandler;
 import io.micronaut.context.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -24,9 +25,11 @@ public class AssistantBot extends TelegramLongPollingBot {
     private String username;
 
     private final HandlerManager manager;
+    private final SubmitHandler submitHandler;
 
-    public AssistantBot(HandlerManager manager) {
+    public AssistantBot(HandlerManager manager, SubmitHandler submitHandler) {
         this.manager = manager;
+        this.submitHandler = submitHandler;
     }
 
     @Override
@@ -37,6 +40,8 @@ public class AssistantBot extends TelegramLongPollingBot {
     private void handle(Update update) {
         try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
             executor.execute(() -> {
+                if (update.hasCallbackQuery())
+                    submitHandler.submit(update);
                 long chatId = update.getMessage().getChatId();
                 log.debug("handle() -> processing message: {}", chatId);
                 manager.handle(update)
@@ -51,7 +56,7 @@ public class AssistantBot extends TelegramLongPollingBot {
         send(errorResponse);
     }
 
-    private void send(OutgoingMessage outgoing) {
+    public void send(OutgoingMessage outgoing) {
         log.debug("send() -> sending outgoing message");
         outgoing.send().forEach(o -> {
             try {

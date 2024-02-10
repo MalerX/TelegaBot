@@ -11,6 +11,7 @@ import com.vk.api.sdk.client.TransportClient;
 import com.vk.api.sdk.client.VkApiClient;
 import com.vk.api.sdk.client.actors.UserActor;
 import com.vk.api.sdk.httpclient.HttpTransportClient;
+import io.camunda.zeebe.client.ZeebeClient;
 import io.micronaut.context.annotation.Bean;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Value;
@@ -90,4 +91,11 @@ public class BeanFactory {
                 .build();
         return accessor.db(arangoDatabase);
     }
+
+//    @Bean
+//    public ZeebeClient zeebeClient() {
+//        return ZeebeClient.newClientBuilder()
+//                .usePlaintext()
+//                .build();
+//    }
 }

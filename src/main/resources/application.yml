@@ -49,3 +49,7 @@ arango:
   user: root
   pass: arango
   db: telega-bot
+zeebe:
+  client:
+    cloud:
+      defaultJobWorkerName: novatec-worker
