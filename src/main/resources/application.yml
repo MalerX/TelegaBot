@@ -4,23 +4,6 @@ micronaut:
     default-charset: UTF-8
   server:
     port: 7373
-datasources:
-  default:
-    url: jdbc:postgresql://${PGHOST:localhost}:${PGPORT:5432}/${PGDATABASE:bot_db}?createDatabaseIfNotExist=true
-    driverClassName: org.postgresql.Driver
-    username: ${PGUSER:postgres}
-    password: ${PGPASSWORD:postgres}
-    schema-generate: CREATE_DROP
-    dialect: POSTGRES
-jpa:
-  default:
-    packages-to-scan:
-      - 'com.malerx'
-    properties:
-      hibernate:
-        hbm2ddl:
-          auto: update
-        show_sql: true
 liquibase:
   datasource:
     default:
@@ -35,8 +18,8 @@ telegram:
   username: ${BOT_NAME:}
 api:
   vk:
-    group_id: ${GROUP_ID}
-    access_token: ${VK_ACCESS_TOKEN}
+    group_id: ${GROUP_ID:}
+    access_token: ${VK_ACCESS_TOKEN:}
   yandex:
     weather: ${WEATHER_TOKEN:}
     urlGeo: https://geocode-maps.yandex.ru/1.x/

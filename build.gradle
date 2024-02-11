@@ -14,43 +14,30 @@ repositories {
 dependencies {
     annotationProcessor("org.projectlombok:lombok")
     annotationProcessor("io.micronaut:micronaut-http-validation")
-    annotationProcessor("io.micronaut.data:micronaut-data-processor")
     implementation("io.micronaut:micronaut-jackson-databind")
-    implementation("io.micronaut.data:micronaut-data-tx-hibernate")
-    implementation("io.micronaut.liquibase:micronaut-liquibase")
-    implementation("io.micronaut.data:micronaut-data-hibernate-jpa")
-    implementation("io.micronaut.sql:micronaut-jdbc-hikari")
     compileOnly("io.micronaut:micronaut-http-client")
     compileOnly("org.projectlombok:lombok")
-    runtimeOnly("org.postgresql:postgresql")
     implementation("de.vandermeer:asciitable:0.3.2")
     implementation 'com.arangodb:arangodb-java-driver:7.5.1'
-    // https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-jsr310
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.16.1")
-
-
-//    runtimeOnly("org.slf4j:slf4j-simple")
     // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core
     implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.22.1'
     // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.22.1'
     // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-slf4j-impl
     testImplementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.22.1'
-
-
     testImplementation("io.micronaut:micronaut-http-client")
     testImplementation("org.testcontainers:junit-jupiter")
-    testImplementation("org.testcontainers:postgresql")
     testImplementation("org.testcontainers:testcontainers")
-
     // https://mvnrepository.com/artifact/org.telegram/telegrambots
     implementation group: 'org.telegram', name: 'telegrambots', version: '6.9.7.0'
     // https://mvnrepository.com/artifact/com.vk.api/sdk
     implementation group: 'com.vk.api', name: 'sdk', version: '1.0.15'
     implementation files("libs/padeg-3.3.0.24.jar")
-
     implementation("info.novatec:micronaut-zeebe-client-feature:1.16.0")
-
+    // https://mvnrepository.com/artifact/org.camunda.bpm.dmn/camunda-engine-dmn
+    implementation("org.camunda.bpm.dmn:camunda-engine-dmn:7.20.0")
+    // https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api
+    implementation("javax.xml.bind:jaxb-api:2.3.1")
 
 }
 
