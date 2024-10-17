@@ -33,6 +33,7 @@ arango:
   pass: arango
   db: telega-bot
 zeebe:
+  enabled: false
   client:
     cloud:
       defaultJobWorkerName: novatec-worker
