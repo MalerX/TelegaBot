@@ -40,8 +40,6 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.telegram/telegrambots
     implementation group: 'org.telegram', name: 'telegrambots', version: '6.9.7.1'
-    // https://mvnrepository.com/artifact/com.vk.api/sdk
-    implementation group: 'com.vk.api', name: 'sdk', version: '1.0.15'
     implementation files("libs/padeg-3.3.0.24.jar")
 }
 

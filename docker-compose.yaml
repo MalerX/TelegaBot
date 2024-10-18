@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: TelegaBot
+    depends_on:
+      - db
+    env_file:
+      - ./envfile.env
+
+  db:
+    image: arangodb:3.7.11
+    container_name: ArangoDB
+    environment:
+      - ARANGO_ROOT_PASSWORD=arango
+    ports:
+      - "8529:8529"
+

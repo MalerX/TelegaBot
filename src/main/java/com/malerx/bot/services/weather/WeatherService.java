@@ -60,8 +60,13 @@ public class WeatherService {
                 .uri(URI.create(uriStr))
                 .build();
         try {
-            return Optional.of(httpClient.send(request, geoDataBodyHandler)
-                    .body().getCoordinates());
+            HttpResponse<GeoData> data = httpClient.send(request, geoDataBodyHandler);
+            if (data.statusCode() == 200)
+                return Optional.ofNullable(data.body().getCoordinates());
+            else {
+                log.error("getCoordinates() -> fail get coordinates, code: {}", data.statusCode());
+                return Optional.empty();
+            }
         } catch (IOException | InterruptedException e) {
             log.error("getWeather() -> error: ", e);
             return Optional.empty();

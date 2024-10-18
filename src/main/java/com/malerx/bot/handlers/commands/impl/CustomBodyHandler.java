@@ -29,8 +29,8 @@ public class CustomBodyHandler<T> implements HttpResponse.BodyHandler<T> {
                 upstream, (InputStream body) -> {
                     try {
                         return mapper.readValue(body, tClass);
-                    } catch (IOException e) {
-                        throw new UncheckedIOException(e);
+                    } catch (Exception e) {
+                        throw new RuntimeException("error handle response: ", e);
                     }
                 });
     }

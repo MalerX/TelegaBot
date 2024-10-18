@@ -13,9 +13,6 @@ telegram:
   token: ${BOT_TOKEN:}
   username: ${BOT_NAME:}
 api:
-  vk:
-    group_id: ${GROUP_ID}
-    access_token: ${VK_ACCESS_TOKEN}
   yandex:
     weather: ${WEATHER_TOKEN:}
     urlGeo: https://geocode-maps.yandex.ru/1.x/
