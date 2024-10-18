@@ -20,8 +20,8 @@ api:
     ip: https://ipv4-internet.yandex.net/api/v0/ip
   cbr: https://www.cbr-xml-daily.ru/latest.js
 arango:
-  host: localhost
+  host: ${ARANGO_HOST:localhost}
   port: 8529
   user: root
-  pass: arango
+  pass: ${ARANGO_ROOT_PASSWORD:arango}
   db: telega-bot
