@@ -13,10 +13,11 @@ telegram:
   token: ${BOT_TOKEN:}
   username: ${BOT_NAME:}
 api:
+  geoUrl: ${GEO_URL:}
+  geoToken: ${GEO_TOKEN:}
+  geoSecret: ${GEO_SECRET:}
   yandex:
     weather: ${WEATHER_TOKEN:}
-    urlGeo: https://geocode-maps.yandex.ru/1.x/
-    geo: ${GEO_TOKEN:}
     ip: https://ipv4-internet.yandex.net/api/v0/ip
   cbr: https://www.cbr-xml-daily.ru/latest.js
 arango:

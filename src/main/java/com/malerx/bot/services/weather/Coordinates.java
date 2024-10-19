@@ -15,10 +15,9 @@ public class Coordinates {
     private final String latitude;
     private final String longitude;
 
-    public Coordinates(String city, String pos) {
-        String[] coordinates = pos.split("\\s");
-        this.longitude = coordinates[0];
-        this.latitude = coordinates[1];
+    public Coordinates(String city, String latitude, String longitude) {
+        this.longitude = longitude;
+        this.latitude = latitude;
         this.city = city;
     }
 
