@@ -80,7 +80,8 @@ public class WeatherService {
             HttpResponse<GeoData> data = httpClient.send(request, geoDataBodyHandler);
             if (data.statusCode() == 200) {
                 GeoData geoData = data.body();
-                return Optional.of(new Coordinates(geoData.getSettlement(), geoData.getGeoLat(), geoData.getGeoLon()));
+                var coordinates = new Coordinates(geoData.getResult(), geoData.getGeoLat(), geoData.getGeoLon());
+                return Optional.of(coordinates);
             } else {
                 log.error("getCoordinates() -> fail get coordinates, code: {}", data.statusCode());
                 return Optional.empty();
@@ -101,6 +102,7 @@ public class WeatherService {
         HttpRequest request = coordinates.request(weatherToken);
         try {
             WeatherData weather = httpClient.send(request, weatherBodyHandler).body();
+            weather.setCity(coordinates.getCity());
             cache.saveDocument(weather, coordinates.getCity());
             return Optional.of(weather);
         } catch (InterruptedException | IOException e) {

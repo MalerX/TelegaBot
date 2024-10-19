@@ -1,5 +1,6 @@
 package com.malerx.bot.services.weather;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
@@ -7,6 +8,9 @@ import java.util.List;
 
 @Data
 public class WeatherData {
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String city;
+
     @JsonProperty("fact")
     private Fact fact;
 
