@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Singleton
+//@Singleton
 @Slf4j
 public class HelpHandler implements CommandHandler {
     private static final String COMMAND = "/help";
