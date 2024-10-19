@@ -1,7 +1,6 @@
 package com.malerx.bot.services.weather;
 
 import com.malerx.bot.data.model.OutgoingMessage;
-import de.vandermeer.asciitable.AT_Renderer;
 import de.vandermeer.asciitable.AT_Row;
 import de.vandermeer.asciitable.AsciiTable;
 import de.vandermeer.asciithemes.TA_GridThemes;
