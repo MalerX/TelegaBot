@@ -3,8 +3,6 @@ package com.malerx.bot.services.weather;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
 public class GeoData {
         private String source;

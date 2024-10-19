@@ -53,17 +53,17 @@ public class WeatherMessage extends OutgoingMessage {
         table.addRow(null, header)
                 .setTextAlignment(TextAlignment.CENTER);
         table.addRule();
-        String tempValue = String.valueOf(fact.getTemp()) + " °C";
+        String tempValue = fact.getTemp() + " °C";
         AT_Row temp = table.addRow("🌡 Температура:", tempValue);
         temp.getCells().getFirst().getContext().setTextAlignment(TextAlignment.LEFT);
         temp.getCells().getLast().getContext().setTextAlignment(TextAlignment.CENTER);
         table.addRule();
-        String humValue = String.valueOf(fact.getHumidity()) + "%";
+        String humValue = fact.getHumidity() + "%";
         AT_Row humidity = table.addRow("🌊 Влажность:", humValue);
         humidity.getCells().getFirst().getContext().setTextAlignment(TextAlignment.LEFT);
         humidity.getCells().getLast().getContext().setTextAlignment(TextAlignment.CENTER);
         table.addRule();
-        String windSpeedV = String.valueOf(fact.getWindSpeed()) + " м/с";
+        String windSpeedV = fact.getWindSpeed() + " м/с";
         AT_Row wind = table.addRow("🌬 Скорость ветра:", windSpeedV);
         wind.getCells().getFirst().getContext().setTextAlignment(TextAlignment.LEFT);
         wind.getCells().getLast().getContext().setTextAlignment(TextAlignment.CENTER);

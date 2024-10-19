@@ -1,8 +1,8 @@
 package com.malerx.bot.handlers.commands.impl;
 
 import com.malerx.bot.data.model.OutgoingMessage;
-import com.malerx.bot.services.weather.WeatherMessage;
 import com.malerx.bot.handlers.commands.CommandHandler;
+import com.malerx.bot.services.weather.WeatherMessage;
 import com.malerx.bot.services.weather.WeatherService;
 import io.micronaut.core.annotation.NonNull;
 import lombok.extern.slf4j.Slf4j;
