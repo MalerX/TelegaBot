@@ -88,7 +88,9 @@ public class GeoData {
         private String taxOffice;
         private String taxOfficeLegal;
         private String timezone;
+        @JsonProperty("geo_lat")
         private String geoLat;
+        @JsonProperty("geo_lon")
         private String geoLon;
         private String beltwayHit;
         private String beltwayDistance;

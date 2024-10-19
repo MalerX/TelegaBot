@@ -24,5 +24,5 @@ arango:
   host: ${ARANGO_HOST:localhost}
   port: 8529
   user: root
-  pass: ${ARANGO_ROOT_PASSWORD:arango}
+  pass: ${ARANGO_ROOT_PASSWORD:6cYcBtlFpziJejobXmnPkXeqamH1jOWXkq6}
   db: telega-bot
