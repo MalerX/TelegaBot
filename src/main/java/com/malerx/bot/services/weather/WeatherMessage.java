@@ -68,7 +68,7 @@ public class WeatherMessage extends OutgoingMessage {
         wind.getCells().getLast().getContext().setTextAlignment(TextAlignment.CENTER);
         table.addRule();
         table.getContext().setWidth(45);
-        table.getContext().setGridTheme(TA_GridThemes.CC);
+        table.getContext().setGridTheme(TA_GridThemes.CONNECTORS);
         return table.render();
     }
 }
