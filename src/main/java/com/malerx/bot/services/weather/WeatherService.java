@@ -1,5 +1,7 @@
 package com.malerx.bot.services.weather;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.malerx.bot.storage.AbstractCache;
 import io.micronaut.context.annotation.Value;
 import io.micronaut.core.annotation.NonNull;
@@ -12,6 +14,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -20,48 +23,69 @@ import java.util.Optional;
 public class WeatherService {
     private final String weatherToken;
     private final String geoToken;
-    private final String urlGeo;
+    private final URI urlGeo;
+    private final String geoSecret;
 
     private final HttpClient httpClient;
     private final HttpResponse.BodyHandler<WeatherData> weatherBodyHandler;
     private final HttpResponse.BodyHandler<GeoData> geoDataBodyHandler;
     private final AbstractCache<WeatherData> cache;
+    private final ObjectMapper mapper;
 
     public WeatherService(HttpClient httpClient,
                           @Value(value = "${api.yandex.weather}") String weatherToken,
-                          @Value(value = "${api.yandex.geo}") String geoToken,
-                          @Value(value = "${api.yandex.urlGeo}") String urlGeo,
+                          @Value(value = "${api.geoToken}") String geoToken,
+                          @Value(value = "${api.geoUrl}") String urlGeo,
+                          @Value(value = "${api.geoSecret}") String geoSecret,
                           HttpResponse.BodyHandler<WeatherData> weatherBodyHandler,
                           HttpResponse.BodyHandler<GeoData> geoDataBodyHandler,
-                          AbstractCache<WeatherData> cache) {
+                          AbstractCache<WeatherData> cache,
+                          ObjectMapper mapper) {
         this.httpClient = httpClient;
         this.weatherToken = weatherToken;
-        this.geoToken = geoToken;
-        this.urlGeo = urlGeo;
+        this.geoToken = "Token " + geoToken;
+        this.urlGeo = URI.create(urlGeo);
+        this.geoSecret = geoSecret;
         this.weatherBodyHandler = weatherBodyHandler;
         this.geoDataBodyHandler = geoDataBodyHandler;
         this.cache = cache;
+        this.mapper = mapper;
     }
 
     public Optional<WeatherData> getWeather(@NonNull Update update) {
         log.debug("handle() -> incoming request weather");
         String[] destination = update.getMessage().getText().split("\\s", 2);
-        return getCoordinates(destination[1])
-                .flatMap(this::getWeather)
-                .or(Optional::empty);
+        try {
+            return getCoordinates(destination[1])
+                    .flatMap(this::getWeather)
+                    .or(Optional::empty);
+        } catch (JsonProcessingException e) {
+            log.debug("getWeather() -> oops...", e);
+            return Optional.empty();
+        }
     }
 
-    private Optional<Coordinates> getCoordinates(String destination) {
+    private Optional<Coordinates> getCoordinates(String destination) throws JsonProcessingException {
         log.debug("getCoordinates() -> send request pos for {}", destination);
-        String uriStr = urlGeo.concat(String.format("?format=json&apikey=%s&geocode=%s",
-                geoToken, destination.replace(" ", "+")));
+        byte[] body = mapper.writeValueAsBytes(List.of(destination));
         HttpRequest request = HttpRequest.newBuilder()
-                .GET()
-                .uri(URI.create(uriStr))
+                .POST(HttpRequest.BodyPublishers.ofByteArray(body))
+                .uri(urlGeo)
+                .header("Content-Type", "application/json")
+                .header("Accept", "application/json")
+                .header("Authorization", geoToken)
+                .header("X-Secret", geoSecret)
                 .build();
         try {
-            return Optional.of(httpClient.send(request, geoDataBodyHandler)
-                    .body().getCoordinates());
+            HttpResponse<GeoData> data = httpClient.send(request, geoDataBodyHandler);
+            if (data.statusCode() == 200) {
+                GeoData geoData = data.body();
+                var coordinates = new Coordinates(geoData.getResult(), geoData.getGeoLat(), geoData.getGeoLon());
+                return Optional.of(coordinates);
+            } else {
+                log.error("getCoordinates() -> fail get coordinates, code: {}", data.statusCode());
+                return Optional.empty();
+            }
         } catch (IOException | InterruptedException e) {
             log.error("getWeather() -> error: ", e);
             return Optional.empty();
@@ -78,6 +102,7 @@ public class WeatherService {
         HttpRequest request = coordinates.request(weatherToken);
         try {
             WeatherData weather = httpClient.send(request, weatherBodyHandler).body();
+            weather.setCity(coordinates.getCity());
             cache.saveDocument(weather, coordinates.getCity());
             return Optional.of(weather);
         } catch (InterruptedException | IOException e) {

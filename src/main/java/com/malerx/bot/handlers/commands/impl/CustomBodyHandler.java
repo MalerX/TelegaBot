@@ -4,9 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.inject.Singleton;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.UncheckedIOException;
 import java.net.http.HttpResponse;
 
 @Singleton
@@ -29,8 +27,8 @@ public class CustomBodyHandler<T> implements HttpResponse.BodyHandler<T> {
                 upstream, (InputStream body) -> {
                     try {
                         return mapper.readValue(body, tClass);
-                    } catch (IOException e) {
-                        throw new UncheckedIOException(e);
+                    } catch (Exception e) {
+                        throw new RuntimeException("error handle response: ", e);
                     }
                 });
     }

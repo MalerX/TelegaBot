@@ -17,7 +17,7 @@ import javax.inject.Singleton;
 import java.util.Optional;
 import java.util.Set;
 
-@Singleton
+//@Singleton
 @Slf4j
 public class VkHandler implements CommandHandler {
     private static final Long OWNER = 421448493L;

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_140uyxo" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.20.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.4.0">
+  <bpmn:process id="telega-process" name="First Telegram Bot process" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_0dj0tfl</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:endEvent id="Event_0mdw21m">
+      <bpmn:incoming>Flow_07tc9nd</bpmn:incoming>
+      <bpmn:incoming>Flow_1dkr3jg</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_160ftd1" sourceRef="echo-worker" targetRef="telega-user-task" />
+    <bpmn:sequenceFlow id="Flow_0dj0tfl" sourceRef="StartEvent_1" targetRef="echo-worker" />
+    <bpmn:serviceTask id="echo-worker" name="EchoWorker">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="echo-worker" />
+        <zeebe:ioMapping>
+          <zeebe:input source="=text" target="text" />
+          <zeebe:input source="=userId" target="userId" />
+          <zeebe:output source="=actions" target="actions" />
+          <zeebe:output source="=echo" target="echo" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0dj0tfl</bpmn:incoming>
+      <bpmn:outgoing>Flow_160ftd1</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="telega-user-task" name="TelegaUserTask">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:input source="=actions" target="actions" />
+          <zeebe:output source="=action" target="action" />
+        </zeebe:ioMapping>
+        <zeebe:formDefinition formKey="telega-form" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_160ftd1</bpmn:incoming>
+      <bpmn:outgoing>Flow_00s00ym</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_07tc9nd" sourceRef="send-message" targetRef="Event_0mdw21m" />
+    <bpmn:serviceTask id="send-message" name="Send Message">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="send-message" />
+        <zeebe:ioMapping>
+          <zeebe:input source="=echo" target="echo" />
+          <zeebe:output source="=success" target="success" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0ttoldc</bpmn:incoming>
+      <bpmn:outgoing>Flow_07tc9nd</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="Gateway_0bcmc08">
+      <bpmn:incoming>Flow_00s00ym</bpmn:incoming>
+      <bpmn:outgoing>Flow_0mn3e1f</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0ttoldc</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_00s00ym" sourceRef="telega-user-task" targetRef="Gateway_0bcmc08" />
+    <bpmn:sequenceFlow id="Flow_0mn3e1f" sourceRef="Gateway_0bcmc08" targetRef="decision-age">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=action = "no"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0ttoldc" sourceRef="Gateway_0bcmc08" targetRef="send-message">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=action = "yes"</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:businessRuleTask id="decision-age" name="Decision age">
+      <bpmn:extensionElements>
+        <zeebe:calledDecision decisionId="decision-age-table" resultVariable="allowed" />
+        <zeebe:ioMapping>
+          <zeebe:input source="={sex: &#34;man&#34;, age: 18}" target="vars" />
+          <zeebe:output source="=allowed" target="allowed" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0mn3e1f</bpmn:incoming>
+      <bpmn:outgoing>Flow_1dkr3jg</bpmn:outgoing>
+    </bpmn:businessRuleTask>
+    <bpmn:sequenceFlow id="Flow_1dkr3jg" sourceRef="decision-age" targetRef="Event_0mdw21m" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="telega-process">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0mdw21m_di" bpmnElement="Event_0mdw21m">
+        <dc:Bounds x="962" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_05i1uzj_di" bpmnElement="echo-worker">
+        <dc:Bounds x="280" y="77" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1c90w8r_di" bpmnElement="telega-user-task">
+        <dc:Bounds x="460" y="77" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0hmlysy_di" bpmnElement="send-message">
+        <dc:Bounds x="740" y="200" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0bcmc08_di" bpmnElement="Gateway_0bcmc08" isMarkerVisible="true">
+        <dc:Bounds x="645" y="92" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0ym6ctv_di" bpmnElement="decision-age">
+        <dc:Bounds x="740" y="77" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_160ftd1_di" bpmnElement="Flow_160ftd1">
+        <di:waypoint x="380" y="117" />
+        <di:waypoint x="460" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0dj0tfl_di" bpmnElement="Flow_0dj0tfl">
+        <di:waypoint x="215" y="117" />
+        <di:waypoint x="280" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_07tc9nd_di" bpmnElement="Flow_07tc9nd">
+        <di:waypoint x="840" y="240" />
+        <di:waypoint x="901" y="240" />
+        <di:waypoint x="901" y="117" />
+        <di:waypoint x="962" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_00s00ym_di" bpmnElement="Flow_00s00ym">
+        <di:waypoint x="560" y="117" />
+        <di:waypoint x="645" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0mn3e1f_di" bpmnElement="Flow_0mn3e1f">
+        <di:waypoint x="695" y="117" />
+        <di:waypoint x="740" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ttoldc_di" bpmnElement="Flow_0ttoldc">
+        <di:waypoint x="670" y="142" />
+        <di:waypoint x="670" y="240" />
+        <di:waypoint x="740" y="240" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1dkr3jg_di" bpmnElement="Flow_1dkr3jg">
+        <di:waypoint x="840" y="117" />
+        <di:waypoint x="962" y="117" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

@@ -4,27 +4,6 @@ micronaut:
     default-charset: UTF-8
   server:
     port: 7373
-datasources:
-  default:
-    url: jdbc:postgresql://${PGHOST:localhost}:${PGPORT:5432}/${PGDATABASE:bot_db}?createDatabaseIfNotExist=true
-    driverClassName: org.postgresql.Driver
-    username: ${PGUSER:postgres}
-    password: ${PGPASSWORD:postgres}
-    schema-generate: CREATE_DROP
-    dialect: POSTGRES
-jpa:
-  default:
-    packages-to-scan:
-      - 'com.malerx'
-    properties:
-      hibernate:
-        hbm2ddl:
-          auto: update
-        show_sql: true
-liquibase:
-  datasource:
-    default:
-      change-log: classpath\:db/liquibase-changelog.xml
 netty:
   default:
     allocator:
@@ -34,18 +13,16 @@ telegram:
   token: ${BOT_TOKEN:}
   username: ${BOT_NAME:}
 api:
-  vk:
-    group_id: ${GROUP_ID}
-    access_token: ${VK_ACCESS_TOKEN}
+  geoUrl: ${GEO_URL:}
+  geoToken: ${GEO_TOKEN:}
+  geoSecret: ${GEO_SECRET:}
   yandex:
     weather: ${WEATHER_TOKEN:}
-    urlGeo: https://geocode-maps.yandex.ru/1.x/
-    geo: ${GEO_TOKEN:}
     ip: https://ipv4-internet.yandex.net/api/v0/ip
   cbr: https://www.cbr-xml-daily.ru/latest.js
 arango:
-  host: localhost
+  host: ${ARANGO_HOST:localhost}
   port: 8529
   user: root
-  pass: arango
+  pass: ${ARANGO_ROOT_PASSWORD:}
   db: telega-bot

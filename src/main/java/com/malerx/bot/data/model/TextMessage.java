@@ -20,7 +20,7 @@ public class TextMessage extends OutgoingMessage {
         return destination.stream()
                 .map(id -> {
                     var msg = new SendMessage(id.toString(), content);
-                    msg.enableMarkdown(Boolean.TRUE);
+//                    msg.enableMarkdown(Boolean.TRUE);
                     return msg;
                 })
                 .collect(Collectors.toSet());
