@@ -40,6 +40,7 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.telegram/telegrambots
     implementation group: 'org.telegram', name: 'telegrambots', version: '6.9.7.1'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.2'
     implementation files("libs/padeg-3.3.0.24.jar")
 }
 

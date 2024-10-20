@@ -2,7 +2,10 @@ package com.malerx.bot.factory;
 
 import com.arangodb.ArangoDB;
 import com.arangodb.ArangoDatabase;
+import com.arangodb.serde.jackson.JacksonSerde;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.malerx.bot.handlers.commands.impl.CustomBodyHandler;
 import com.malerx.bot.services.exchange.Exchange;
 import com.malerx.bot.services.weather.GeoData;
@@ -63,10 +66,19 @@ public class BeanFactory {
     @Bean
     public ArangoDatabase arangoDatabase() {
         ArangoDB accessor = new ArangoDB.Builder()
+                .serde(JacksonSerde.create(mapper))
                 .host(arangoHost, arangoPort)
                 .user(arangoUser)
                 .password(arangoPass)
                 .build();
         return accessor.db(arangoDatabase);
+    }
+
+    @Bean
+    public ObjectMapper mapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        mapper.registerModule(new JavaTimeModule());
+        return mapper;
     }
 }

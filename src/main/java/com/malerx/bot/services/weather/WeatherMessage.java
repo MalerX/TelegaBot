@@ -7,12 +7,13 @@ import de.vandermeer.asciithemes.TA_GridThemes;
 import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
 import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import padeg.lib.Padeg;
 
 import javax.inject.Singleton;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class WeatherMessage extends OutgoingMessage {
     private static final DateTimeFormatter output = DateTimeFormatter.ofPattern("dd.MM.yy");
-    private static final String HEADER_TEMPLATE = "Погода\n%s\nна %s";
+    private static final String HEADER_TEMPLATE = "Погода %s на %s";
     private final WeatherData weather;
 
     public WeatherMessage(Set<Long> destination, WeatherData weather) {
@@ -45,7 +46,9 @@ public class WeatherMessage extends OutgoingMessage {
         log.debug("createTable() -> build table with weather");
         Fact fact = weather.getFact();
         String city = weather.getCity();
-        LocalDate date = LocalDate.parse(weather.getNowDt().substring(0, 10));
+        LocalDate date = Optional.of(weather.getNowDt())
+                .map(OffsetDateTime::toLocalDate)
+                .orElse(LocalDate.now());
         String header = String.format(HEADER_TEMPLATE, city, output.format(date));
         AsciiTable table = new AsciiTable();
         table.addRule();

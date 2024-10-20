@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Data
@@ -24,7 +25,7 @@ public class WeatherData {
     private long now;
 
     @JsonProperty("now_dt")
-    private String nowDt;
+    private OffsetDateTime nowDt;
 
 }
 
