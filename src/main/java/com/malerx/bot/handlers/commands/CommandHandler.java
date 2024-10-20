@@ -19,4 +19,6 @@ public interface CommandHandler {
     Optional<OutgoingMessage> handle(@NonNull Update update);
 
     Boolean support(@NonNull Update update);
+
+    String getInfo();
 }

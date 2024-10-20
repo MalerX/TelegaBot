@@ -14,7 +14,7 @@ import java.util.Set;
 @Singleton
 @Slf4j
 public class EchoHandler implements CommandHandler {
-    private static final String COMMAND = "/echo ";
+    private static final String COMMAND = "/echo";
 
     @Override
     public Optional<OutgoingMessage> handle(@NonNull Update update) {
@@ -28,5 +28,10 @@ public class EchoHandler implements CommandHandler {
     @Override
     public Boolean support(@NonNull Update update) {
         return update.getMessage().getText().startsWith(COMMAND);
+    }
+
+    @Override
+    public String getInfo() {
+        return COMMAND + " -- эхо хэндлер";
     }
 }
