@@ -4,10 +4,10 @@ import com.malerx.bot.data.model.OutgoingMessage;
 import com.malerx.bot.data.model.TextMessage;
 import com.malerx.bot.storage.AbstractCache;
 import io.micronaut.context.annotation.Value;
-import jakarta.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
