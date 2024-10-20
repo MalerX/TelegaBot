@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class WeatherMessage extends OutgoingMessage {
     private static final DateTimeFormatter output = DateTimeFormatter.ofPattern("dd.MM.yy");
-    private static final String HEADER_TEMPLATE = "Погода по %s на %s";
+    private static final String HEADER_TEMPLATE = "Погода\n%s\nна %s";
     private final WeatherData weather;
 
     public WeatherMessage(Set<Long> destination, WeatherData weather) {
