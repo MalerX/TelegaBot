@@ -38,6 +38,6 @@ public class WeatherHandler implements CommandHandler {
 
     @Override
     public String getInfo() {
-        return String.format("%s - прогноз погоды в указанном месте", COMMAND);
+        return COMMAND + " -- прогноз погоды в указанном месте";
     }
 }

@@ -32,6 +32,6 @@ public class ExchangeHandler implements CommandHandler {
 
     @Override
     public String getInfo() {
-        return "конвертёр валют из рублей в указанную валюту по курсу ЦБР.";
+        return COMMAND + " -- конвертер рублей";
     }
 }

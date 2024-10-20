@@ -13,11 +13,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-//@Singleton
+@Singleton
 @Slf4j
 public class HelpHandler implements CommandHandler {
     private static final String COMMAND = "/help";
-    private static final String header = "Добро пожаловать в интерактивную мультимедийную систему бота Технопарка.\n\n";
+    private static final String header = "Что я умею:\n\n";
 
     private final Collection<CommandHandler> handlers;
 
@@ -51,6 +51,6 @@ public class HelpHandler implements CommandHandler {
 
     @Override
     public String getInfo() {
-        return  "информация о возможностей хэндлера";
+        return COMMAND + " -- информация о возможностей хэндлера";
     }
 }
