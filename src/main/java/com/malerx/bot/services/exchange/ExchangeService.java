@@ -50,7 +50,7 @@ public class ExchangeService {
             return message(update, "Не удалось загрузить курсы валют");
         Double currentCourse = currencies.getOrDefault(currency.toUpperCase(), 0.0);
         Double exchanged = money * currentCourse;
-        String message = String.format("Обмен по курсу %f.3 -- %f.3", currentCourse, exchanged);
+        String message = String.format("%.2f RUB = %.2f %s", money, exchanged, currency);
         return message(update, message);
     }
 

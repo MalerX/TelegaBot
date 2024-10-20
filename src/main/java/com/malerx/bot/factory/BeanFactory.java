@@ -2,7 +2,10 @@ package com.malerx.bot.factory;
 
 import com.arangodb.ArangoDB;
 import com.arangodb.ArangoDatabase;
+import com.arangodb.serde.jackson.JacksonSerde;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.malerx.bot.handlers.commands.impl.CustomBodyHandler;
 import com.malerx.bot.services.exchange.Exchange;
 import com.malerx.bot.services.weather.GeoData;
@@ -10,8 +13,6 @@ import com.malerx.bot.services.weather.WeatherData;
 import io.micronaut.context.annotation.Bean;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Value;
-import org.camunda.bpm.dmn.engine.DmnEngine;
-import org.camunda.bpm.dmn.engine.DmnEngineConfiguration;
 
 import java.net.http.HttpClient;
 import java.net.http.HttpResponse;
@@ -19,12 +20,12 @@ import java.util.concurrent.Executors;
 
 @Factory
 public class BeanFactory {
+    private final ObjectMapper mapper;
     private final String arangoHost;
     private final int arangoPort;
     private final String arangoUser;
     private final String arangoPass;
     private final String arangoDatabase;
-    private final ObjectMapper mapper;
 
     public BeanFactory(ObjectMapper mapper,
                        @Value(value = "${arango.host}") String arangoHost,
@@ -33,8 +34,6 @@ public class BeanFactory {
                        @Value(value = "${arango.db:}") String arangoDatabase,
                        @Value(value = "${arango.pass}") String arangoPass) {
         this.mapper = mapper;
-//        this.vkToken = vkToken;
-//        this.groupId = groupId;
         this.arangoHost = arangoHost;
         this.arangoPass = arangoPass;
         this.arangoPort = arangoPort;
@@ -67,6 +66,7 @@ public class BeanFactory {
     @Bean
     public ArangoDatabase arangoDatabase() {
         ArangoDB accessor = new ArangoDB.Builder()
+                .serde(JacksonSerde.create(mapper))
                 .host(arangoHost, arangoPort)
                 .user(arangoUser)
                 .password(arangoPass)
@@ -75,8 +75,10 @@ public class BeanFactory {
     }
 
     @Bean
-    public DmnEngine dmnEngine() {
-        return DmnEngineConfiguration.createDefaultDmnEngineConfiguration()
-                .buildEngine();
+    public ObjectMapper mapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        mapper.registerModule(new JavaTimeModule());
+        return mapper;
     }
 }

@@ -3,172 +3,99 @@ package com.malerx.bot.services.weather;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
 public class GeoData {
-    @JsonProperty("response")
-    private Response response;
-
-    public Coordinates getCoordinates() {
-        String pos = response.getGeoObjectCollection()
-                .getFeatureMembers().getFirst()
-                .getGeoObject().getPoint().getPos();
-        String city = response.getGeoObjectCollection()
-                .getFeatureMembers().getFirst().getGeoObject().getName();
-        return new Coordinates(city, pos);
-    }
-}
-
-@Data
-class Response {
-    @JsonProperty("GeoObjectCollection")
-    private GeoObjectCollection geoObjectCollection;
-}
-
-@Data
-class GeoObjectCollection {
-    @JsonProperty("featureMember")
-    private List<FeatureMember> featureMembers;
-
-    @JsonProperty("metaDataProperty")
-    private MetaDataProperty metaDataProperty;
-}
-
-@Data
-class FeatureMember {
-    @JsonProperty("GeoObject")
-    private GeoObject geoObject;
-}
-
-@Data
-class GeoObject {
-    @JsonProperty("Point")
-    private Point point;
-
-    @JsonProperty("boundedBy")
-    private BoundedBy boundedBy;
-
-    @JsonProperty("description")
-    private String description;
-
-    @JsonProperty("metaDataProperty")
-    private MetaDataProperty metaDataProperty;
-
-    @JsonProperty("name")
-    private String name;
-
-    @JsonProperty("uri")
-    private String uri;
-}
-
-@Data
-class Point {
-    @JsonProperty("pos")
-    private String pos;
-}
-
-@Data
-class BoundedBy {
-    @JsonProperty("Envelope")
-    private Envelope envelope;
-}
-
-@Data
-class Envelope {
-    @JsonProperty("lowerCorner")
-    private String lowerCorner;
-
-    @JsonProperty("upperCorner")
-    private String upperCorner;
-}
-
-@Data
-class MetaDataProperty {
-    @JsonProperty("GeocoderMetaData")
-    private GeocoderMetaData geocoderMetaData;
-
-    @JsonProperty("GeocoderResponseMetaData")
-    private GeocoderResponseMetaData geocoderResponseMetaData;
-}
-
-@Data
-class GeocoderMetaData {
-    @JsonProperty("Address")
-    private Address address;
-
-    @JsonProperty("AddressDetails")
-    private AddressDetails addressDetails;
-
-    @JsonProperty("kind")
-    private String kind;
-
-    @JsonProperty("precision")
-    private String precision;
-
-    @JsonProperty("text")
-    private String text;
-}
-
-@Data
-class Address {
-    @JsonProperty("Components")
-    private List<Component> components;
-
-    @JsonProperty("country_code")
-    private String countryCode;
-
-    @JsonProperty("formatted")
-    private String formatted;
-}
-
-@Data
-class Component {
-    @JsonProperty("kind")
-    private String kind;
-
-    @JsonProperty("name")
-    private String name;
-}
-
-@Data
-class AddressDetails {
-    @JsonProperty("Country")
-    private Country country;
-}
-
-@Data
-class Country {
-    @JsonProperty("AddressLine")
-    private String addressLine;
-
-    @JsonProperty("AdministrativeArea")
-    private AdministrativeArea administrativeArea;
-
-    @JsonProperty("CountryName")
-    private String countryName;
-
-    @JsonProperty("CountryNameCode")
-    private String countryNameCode;
-}
-
-@Data
-class AdministrativeArea {
-    @JsonProperty("AdministrativeAreaName")
-    private String administrativeAreaName;
-}
-
-@Data
-class GeocoderResponseMetaData {
-    @JsonProperty("boundedBy")
-    private Envelope boundedBy;
-
-    @JsonProperty("found")
-    private String found;
-
-    @JsonProperty("request")
-    private String request;
-
-    @JsonProperty("results")
-    private String results;
+        private String source;
+        private String result;
+        private String postalCode;
+        private String country;
+        private String countryIsoCode;
+        private String federalDistrict;
+        private String regionFiasId;
+        private String regionKladrId;
+        private String regionIsoCode;
+        private String regionWithType;
+        private String regionType;
+        private String regionTypeFull;
+        private String region;
+        private String areaFiasId;
+        private String areaKladrId;
+        private String areaWithType;
+        private String areaType;
+        private String areaTypeFull;
+        private String area;
+        private String cityFiasId;
+        private String cityKladrId;
+        private String cityWithType;
+        private String cityType;
+        private String cityTypeFull;
+        private String city;
+        private String cityArea;
+        private String cityDistrictFiasId;
+        private String cityDistrictKladrId;
+        private String cityDistrictWithType;
+        private String cityDistrictType;
+        private String cityDistrictTypeFull;
+        private String cityDistrict;
+        private String settlementFiasId;
+        private String settlementKladrId;
+        private String settlementWithType;
+        private String settlementType;
+        private String settlementTypeFull;
+        private String settlement;
+        private String streetFiasId;
+        private String streetKladrId;
+        private String streetWithType;
+        private String streetType;
+        private String streetTypeFull;
+        private String street;
+        private String steadFiasId;
+        private String steadKladrId;
+        private String steadCadnum;
+        private String steadType;
+        private String steadTypeFull;
+        private String stead;
+        private String houseFiasId;
+        private String houseKladrId;
+        private String houseCadnum;
+        private String houseType;
+        private String houseTypeFull;
+        private String house;
+        private String blockType;
+        private String blockTypeFull;
+        private String block;
+        private String entrance;
+        private String floor;
+        private String flatFiasId;
+        private String flatCadnum;
+        private String flatType;
+        private String flatTypeFull;
+        private String flat;
+        private String flatArea;
+        private String squareMeterPrice;
+        private String flatPrice;
+        private String postalBox;
+        private String fiasId;
+        private String fiasCode;
+        private String fiasLevel;
+        private String fiasActualityState;
+        private String kladrId;
+        private String capitalMarker;
+        private String okato;
+        private String oktmo;
+        private String taxOffice;
+        private String taxOfficeLegal;
+        private String timezone;
+        @JsonProperty("geo_lat")
+        private String geoLat;
+        @JsonProperty("geo_lon")
+        private String geoLon;
+        private String beltwayHit;
+        private String beltwayDistance;
+        private int qcGeo;
+        private int qcComplete;
+        private int qcHouse;
+        private int qc;
+        private String unparsedParts;
+        private String metro;
 }
