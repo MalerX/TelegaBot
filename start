@@ -1,0 +1,1 @@
+java $TELEGA_BOT --add-opens java.base/java.lang=ALL-UNNAMED -jar build/libs/TelegaBot-0.1-all.jar
