@@ -4,6 +4,7 @@ import com.malerx.bot.data.model.OutgoingMessage;
 import com.malerx.bot.handlers.commands.CommandHandler;
 import io.micronaut.core.annotation.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import javax.inject.Singleton;
@@ -20,7 +21,12 @@ public class HandlerManager {
     }
 
     public Optional<OutgoingMessage> handle(@NonNull Update update) {
-        if (update.hasMessage() && update.getMessage().getText().startsWith("/"))
+        boolean isCommand = Optional.of(update)
+                .map(Update::getMessage)
+                .map(Message::getText)
+                .map(text -> text.startsWith("/"))
+                .orElse(false);
+        if (isCommand)
             return commandHandling(update);
         return Optional.empty();
     }
