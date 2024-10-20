@@ -44,9 +44,9 @@ public class WeatherMessage extends OutgoingMessage {
     public String toString() {
         log.debug("createTable() -> build table with weather");
         Fact fact = weather.getFact();
-        String rodCity = Padeg.getAppointmentPadeg(weather.getCity(), 3);
+        String city = weather.getCity();
         LocalDate date = LocalDate.parse(weather.getNowDt().substring(0, 10));
-        String header = String.format(HEADER_TEMPLATE, rodCity, output.format(date));
+        String header = String.format(HEADER_TEMPLATE, city, output.format(date));
         AsciiTable table = new AsciiTable();
         table.addRule();
         table.addRow(null, header)
