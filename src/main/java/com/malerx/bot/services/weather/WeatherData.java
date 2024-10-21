@@ -25,7 +25,7 @@ public class WeatherData {
     private long now;
 
     @JsonProperty("now_dt")
-    private OffsetDateTime nowDt;
+    private String nowDt;
 
 }
 
