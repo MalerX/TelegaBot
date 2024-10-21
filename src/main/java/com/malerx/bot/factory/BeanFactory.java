@@ -4,8 +4,6 @@ import com.arangodb.ArangoDB;
 import com.arangodb.ArangoDatabase;
 import com.arangodb.serde.jackson.JacksonSerde;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.malerx.bot.handlers.commands.impl.CustomBodyHandler;
 import com.malerx.bot.services.exchange.Exchange;
 import com.malerx.bot.services.weather.GeoData;
@@ -18,28 +16,31 @@ import java.net.http.HttpClient;
 import java.net.http.HttpResponse;
 import java.util.concurrent.Executors;
 
+import static io.vertx.core.json.jackson.DatabindCodec.mapper;
+
 @Factory
 public class BeanFactory {
-    private final ObjectMapper mapper;
     private final String arangoHost;
     private final int arangoPort;
     private final String arangoUser;
     private final String arangoPass;
     private final String arangoDatabase;
+    private final ObjectMapper mapper;
 
-    public BeanFactory(ObjectMapper mapper,
-                       @Value(value = "${arango.host}") String arangoHost,
+    public BeanFactory(@Value(value = "${arango.host}") String arangoHost,
                        @Value(value = "${arango.port}") int arangoPort,
                        @Value(value = "${arango.user}") String arangoUser,
                        @Value(value = "${arango.db:}") String arangoDatabase,
-                       @Value(value = "${arango.pass}") String arangoPass) {
-        this.mapper = mapper;
+                       @Value(value = "${arango.pass}") String arangoPass,
+                       ObjectMapper mapper) {
         this.arangoHost = arangoHost;
         this.arangoPass = arangoPass;
         this.arangoPort = arangoPort;
         this.arangoUser = arangoUser;
         this.arangoDatabase = arangoDatabase;
+        this.mapper = mapper;
     }
+
 
     @Bean
     public HttpClient httpClient() {
@@ -66,19 +67,11 @@ public class BeanFactory {
     @Bean
     public ArangoDatabase arangoDatabase() {
         ArangoDB accessor = new ArangoDB.Builder()
-                .serde(JacksonSerde.create(mapper))
+                .serde(JacksonSerde.create(mapper()))
                 .host(arangoHost, arangoPort)
                 .user(arangoUser)
                 .password(arangoPass)
                 .build();
         return accessor.db(arangoDatabase);
-    }
-
-    @Bean
-    public ObjectMapper mapper() {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        mapper.registerModule(new JavaTimeModule());
-        return mapper;
     }
 }

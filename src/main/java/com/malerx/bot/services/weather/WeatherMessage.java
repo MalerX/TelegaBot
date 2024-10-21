@@ -47,6 +47,7 @@ public class WeatherMessage extends OutgoingMessage {
         Fact fact = weather.getFact();
         String city = weather.getCity();
         LocalDate date = Optional.of(weather.getNowDt())
+                .map(OffsetDateTime::parse)
                 .map(OffsetDateTime::toLocalDate)
                 .orElse(LocalDate.now());
         String header = String.format(HEADER_TEMPLATE, city, output.format(date));

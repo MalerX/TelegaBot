@@ -59,7 +59,7 @@ public abstract class AbstractCache<T> {
         BaseDocument document = new BaseDocument(UUID.randomUUID().toString());
         document.addAttribute(LABEL, label);
         document.addAttribute(BODY, body);
-        document.addAttribute("date", LocalDateTime.now());
+        document.addAttribute("date", LocalDateTime.now().toString());
         return document;
     }
 }
