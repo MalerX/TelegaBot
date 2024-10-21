@@ -34,13 +34,13 @@ public class TestZeebeHandler implements CommandHandler {
                 .bpmnProcessId(TEST_PROCESS)
                 .latestVersion()
                 .variables(vars)
-                .send().join();
-//                .whenComplete((processInstanceEvent, throwable) -> {
-//                    if (throwable == null)
-//                        log.debug("handle() -> success start");
-//                    else
-//                        log.error("handle() -> fail start ", throwable);
-//                });
+                .send()
+                .whenComplete((processInstanceEvent, throwable) -> {
+                    if (throwable == null)
+                        log.debug("handle() -> success start");
+                    else
+                        log.error("handle() -> fail start ", throwable);
+                });
         OutgoingMessage message = new TextMessage(Set.of(userId), "start BP");
         return Optional.of(message);
     }

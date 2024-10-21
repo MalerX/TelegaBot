@@ -1,5 +1,0 @@
-FOR u IN @@collection
-    FILTER u.userId == @userId && u.instanceKey == @instanceKey
-    SORT u.date DESC
-    LIMIT 1
-RETURN u

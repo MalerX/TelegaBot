@@ -37,9 +37,7 @@ public class EchoWorker implements JobHandler {
                 job.getBpmnProcessId(), job.getKey(), job.getProcessDefinitionVersion());
         Input input = job.getVariablesAsType(Input.class);
         buildMessage(input, job.getProcessInstanceKey());
-        String echo = "echo -- " + input.text;
-        Map<String, Object> vars = Map.of("actions", List.of("yes", "no"),
-                "echo", echo);
+        Map<String, Object> vars = Map.of("actions", List.of("yes", "no"), "userId", input.userId);
         client.newCompleteCommand(job)
                 .variables(vars)
                 .send()
