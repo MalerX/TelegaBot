@@ -29,6 +29,7 @@ dependencies {
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.16.1")
 
 
+
 //    runtimeOnly("org.slf4j:slf4j-simple")
     // https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core
     implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.22.1'
@@ -48,8 +49,6 @@ dependencies {
     // https://mvnrepository.com/artifact/com.vk.api/sdk
     implementation group: 'com.vk.api', name: 'sdk', version: '1.0.15'
     implementation files("libs/padeg-3.3.0.24.jar")
-
-    implementation("info.novatec:micronaut-zeebe-client-feature:1.16.0")
 
 
 }
@@ -73,11 +72,10 @@ micronaut {
     processing {
         incremental(true)
         annotations("com.malerx.*")
-        annotations("micronaut.zeebe.client.example.*")
     }
     aot {
-        // Please review carefully the optimizations enabled below
-        // Check https://micronaut-projects.github.io/micronaut-aot/latest/guide/ for more details
+    // Please review carefully the optimizations enabled below
+    // Check https://micronaut-projects.github.io/micronaut-aot/latest/guide/ for more details
         optimizeServiceLoading = false
         convertYamlToJava = false
         precomputeOperations = true
