@@ -8,7 +8,6 @@ import io.camunda.zeebe.client.ZeebeClient;
 import lombok.Data;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.camunda.bpm.dmn.engine.DmnEngine;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import javax.inject.Singleton;
@@ -25,7 +24,6 @@ public class SubmitHandler {
     private final ArangoDatabase database;
     private final ZeebeClient client;
     private final ObjectMapper mapper;
-//    private final DmnEngine
 
     public SubmitHandler(ArangoDatabase database, ZeebeClient client, ObjectMapper mapper) {
         this.database = database;
